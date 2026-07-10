@@ -77,7 +77,7 @@ const App: React.FC = () => {
     };
   }, [handleButtonClick, evaluate]);
 
-  // Escolhe qual painel lateral renderizar
+  // Escolhe qual painel lateral renderizar (Gráfico agora renderiza fora)
   const renderPanel = () => {
     switch (activePanel) {
       case 'history':
@@ -98,29 +98,41 @@ const App: React.FC = () => {
             onClearVariables={clearVariables}
           />
         );
-      case 'graph':
-        return <GraphPanel initialExpression={expression} />;
       default:
         return null;
     }
   };
 
   return (
-    <Shell
-      activePanel={activePanel}
-      setActivePanel={setActivePanel}
-      angleMode={angleMode}
-      setAngleMode={setAngleMode}
-      panelContent={renderPanel()}
-    >
-      <Display
-        expression={expression}
-        result={result}
+    <>
+      <Shell
+        activePanel={activePanel === 'graph' ? null : activePanel}
+        setActivePanel={setActivePanel}
         angleMode={angleMode}
-        hasMemory={memory !== 0}
-      />
-      <Keypad onButtonClick={handleButtonClick} />
-    </Shell>
+        setAngleMode={setAngleMode}
+        panelContent={renderPanel()}
+      >
+        <Display
+          expression={expression}
+          result={result}
+          angleMode={angleMode}
+          hasMemory={memory !== 0}
+        />
+        <Keypad onButtonClick={handleButtonClick} />
+      </Shell>
+
+      {/* Modal de Gráficos em Tela Inteira */}
+      {activePanel === 'graph' && (
+        <div className="graph-fullscreen-overlay animate-fade-in">
+          <div className="graph-fullscreen-container animate-scale-in">
+            <GraphPanel 
+              initialExpression={expression} 
+              onClose={() => setActivePanel(null)} 
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
