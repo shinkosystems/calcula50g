@@ -1,6 +1,6 @@
 /* @sos-edit: false */
 import React, { useState, useEffect, useRef } from 'react';
-import functionPlot from 'function-plot';
+import functionPlotModule from 'function-plot';
 import './GraphPanel.css';
 
 interface GraphPanelProps {
@@ -50,7 +50,16 @@ export const GraphPanel: React.FC<GraphPanelProps> = ({ initialExpression = '' }
         .replace(/cos\(/g, 'cos(')
         .replace(/tan\(/g, 'tan(');
 
-      functionPlot({
+      // Resolução segura de importação (CJS / ESM interop)
+      const plotFn = typeof functionPlotModule === 'function'
+        ? functionPlotModule
+        : (functionPlotModule as any).default;
+
+      if (typeof plotFn !== 'function') {
+        throw new Error('A biblioteca de plotagem de gráficos não pôde ser iniciada como uma função.');
+      }
+
+      plotFn({
         target: targetRef.current,
         width,
         height,
@@ -68,7 +77,7 @@ export const GraphPanel: React.FC<GraphPanelProps> = ({ initialExpression = '' }
       });
     } catch (err: any) {
       console.error(err);
-      setError('Expressão inválida para gráfico de f(x)');
+      setError(err.message || 'Expressão inválida para gráfico de f(x)');
     }
   };
 
