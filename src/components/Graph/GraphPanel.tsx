@@ -61,7 +61,7 @@ export const GraphPanel: React.FC<GraphPanelProps> = ({ initialExpression = '', 
         throw new Error('A biblioteca de plotagem de gráficos não pôde ser iniciada como uma função.');
       }
 
-      plotFn({
+      const chartInstance = plotFn({
         target: targetRef.current,
         width,
         height,
@@ -78,46 +78,144 @@ export const GraphPanel: React.FC<GraphPanelProps> = ({ initialExpression = '', 
         ]
       });
 
-      // Adicionar setas nas pontas dos eixos e formatar linhas principais
+      // ---- Pós-processamento SVG para destacar eixos cartesianos ----
       const svg = targetRef.current.querySelector('svg');
-      if (svg) {
+      if (!svg || !chartInstance) return;
+
+      // Obter o grupo de conteúdo (canvas interno do SVG) e margens do chart
+      const meta = (chartInstance as any).meta;
+      const margin = meta?.margin ?? { left: 40, top: 20, right: 20, bottom: 30 };
+      const xScale = meta?.xScale;
+      const yScale = meta?.yScale;
+
+      // Calcular posições em pixel de x=0 e y=0
+      const zeroX = xScale ? xScale(0) : null;
+      const zeroY = yScale ? yScale(0) : null;
+
+      // Dimensões internas do canvas de plotagem
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      // Detectar tema escuro
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const axisColor = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.88)';
+      const labelColor = isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)';
+
+      // Criar/atualizar o grupo de overlays dentro do canvas de conteúdo
+      const contentGroup = svg.querySelector('.function-plot-canvas');
+      if (contentGroup && zeroX !== null && zeroY !== null) {
+        // Remover overlays anteriores para evitar duplicatas em redimensionamento
+        contentGroup.querySelectorAll('.cartesian-overlay').forEach(el => el.remove());
+
+        const ns = 'http://www.w3.org/2000/svg';
+
+        // --- Definições de setas ---
         let defs = svg.querySelector('defs');
         if (!defs) {
-          defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+          defs = document.createElementNS(ns, 'defs');
           svg.insertBefore(defs, svg.firstChild);
         }
+        // Remover marcadores anteriores para redesenhar com cor correta
+        ['arrow-x', 'arrow-y'].forEach(id => {
+          const prev = defs!.querySelector(`#${id}`);
+          if (prev) prev.remove();
+        });
 
-        const markerId = 'arrow-marker';
-        if (!defs.querySelector(`#${markerId}`)) {
-          const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-          marker.setAttribute('id', markerId);
+        const makeArrow = (id: string) => {
+          const marker = document.createElementNS(ns, 'marker');
+          marker.setAttribute('id', id);
           marker.setAttribute('viewBox', '0 0 10 10');
-          marker.setAttribute('refX', '5');
+          marker.setAttribute('refX', '8');
           marker.setAttribute('refY', '5');
-          marker.setAttribute('markerWidth', '6');
-          marker.setAttribute('markerHeight', '6');
+          marker.setAttribute('markerWidth', '8');
+          marker.setAttribute('markerHeight', '8');
           marker.setAttribute('orient', 'auto-start-reverse');
-
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z');
-          path.setAttribute('fill', 'currentColor');
-          
+          const path = document.createElementNS(ns, 'path');
+          path.setAttribute('d', 'M 0 1 L 9 5 L 0 9 z');
+          path.setAttribute('fill', axisColor);
           marker.appendChild(path);
-          defs.appendChild(marker);
-        }
+          defs!.appendChild(marker);
+          return marker;
+        };
+        makeArrow('arrow-x');
+        makeArrow('arrow-y');
 
-        // Seta no final do Eixo X (direita)
-        const xAxisDomain = svg.querySelector('.x.axis .domain');
-        if (xAxisDomain) {
-          xAxisDomain.setAttribute('marker-end', `url(#${markerId})`);
-        }
+        const overlayGroup = document.createElementNS(ns, 'g');
+        overlayGroup.setAttribute('class', 'cartesian-overlay');
 
-        // Seta no início do Eixo Y (para cima)
-        const yAxisDomain = svg.querySelector('.y.axis .domain');
-        if (yAxisDomain) {
-          yAxisDomain.setAttribute('marker-start', `url(#${markerId})`);
-        }
+        // --- Linha do Eixo X (horizontal passando por y=0) ---
+        const lineX = document.createElementNS(ns, 'line');
+        lineX.setAttribute('x1', '0');
+        lineX.setAttribute('y1', String(zeroY));
+        lineX.setAttribute('x2', String(innerWidth));
+        lineX.setAttribute('y2', String(zeroY));
+        lineX.setAttribute('stroke', axisColor);
+        lineX.setAttribute('stroke-width', '2');
+        lineX.setAttribute('marker-end', 'url(#arrow-x)');
+        overlayGroup.appendChild(lineX);
+
+        // --- Linha do Eixo Y (vertical passando por x=0) ---
+        const lineY = document.createElementNS(ns, 'line');
+        lineY.setAttribute('x1', String(zeroX));
+        lineY.setAttribute('y1', String(innerHeight));
+        lineY.setAttribute('x2', String(zeroX));
+        lineY.setAttribute('y2', '0');
+        lineY.setAttribute('stroke', axisColor);
+        lineY.setAttribute('stroke-width', '2');
+        lineY.setAttribute('marker-end', 'url(#arrow-y)');
+        overlayGroup.appendChild(lineY);
+
+        // --- Ponto de origem (0, 0) ---
+        const originDot = document.createElementNS(ns, 'circle');
+        originDot.setAttribute('cx', String(zeroX));
+        originDot.setAttribute('cy', String(zeroY));
+        originDot.setAttribute('r', '4');
+        originDot.setAttribute('fill', axisColor);
+        overlayGroup.appendChild(originDot);
+
+        // --- Labels "X" e "Y" nas pontas dos eixos ---
+        const labelX = document.createElementNS(ns, 'text');
+        labelX.setAttribute('x', String(innerWidth + 14));
+        labelX.setAttribute('y', String(zeroY + 4));
+        labelX.setAttribute('fill', labelColor);
+        labelX.setAttribute('font-size', '13');
+        labelX.setAttribute('font-weight', '700');
+        labelX.setAttribute('font-family', "'JetBrains Mono', monospace");
+        labelX.textContent = 'x';
+        overlayGroup.appendChild(labelX);
+
+        const labelY = document.createElementNS(ns, 'text');
+        labelY.setAttribute('x', String(zeroX - 10));
+        labelY.setAttribute('y', '-6');
+        labelY.setAttribute('fill', labelColor);
+        labelY.setAttribute('font-size', '13');
+        labelY.setAttribute('font-weight', '700');
+        labelY.setAttribute('font-family', "'JetBrains Mono', monospace");
+        labelY.textContent = 'y';
+        overlayGroup.appendChild(labelY);
+
+        contentGroup.appendChild(overlayGroup);
       }
+
+      // --- Estilizar labels dos ticks ---
+      svg.querySelectorAll('.axis text').forEach(el => {
+        (el as SVGTextElement).style.fill = labelColor;
+        (el as SVGTextElement).style.fontSize = '11px';
+        (el as SVGTextElement).style.fontFamily = "'JetBrains Mono', monospace";
+        (el as SVGTextElement).style.fontWeight = '500';
+      });
+
+      // --- Suavizar grid lines e eixos de borda ---
+      svg.querySelectorAll('.grid line').forEach(el => {
+        (el as SVGLineElement).style.stroke = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+      });
+      svg.querySelectorAll('.axis path.domain').forEach(el => {
+        (el as SVGPathElement).style.display = 'none'; // Esconde domínio da borda — substituído pelos overlays
+      });
+      svg.querySelectorAll('.axis .tick line').forEach(el => {
+        (el as SVGLineElement).style.stroke = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+      });
+
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Expressão inválida para gráfico de f(x)');
