@@ -1,0 +1,82 @@
+/* @sos-edit: false */
+:root {
+  /* Color Palette - Dark Premium */
+  --bg-primary: #0d0d0f;
+  --bg-secondary: #16161a;
+  --bg-tertiary: #1f1f24;
+  --bg-display: #09090b;
+
+  --accent-primary: #7c3aed; /* Purple neon */
+  --accent-primary-hover: #9061f9;
+  --accent-secondary: #06b6d4; /* Cyan neon */
+  --accent-secondary-hover: #22d3ee;
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  --text-accent: #a78bfa;
+
+  /* Button Types */
+  --btn-num-bg: #1c1c21;
+  --btn-num-hover: #26262c;
+  --btn-op-bg: #2d2d34;
+  --btn-op-hover: #37373f;
+  --btn-fn-bg: #1e293b;
+  --btn-fn-hover: #334155;
+  --btn-act-bg: #ef4444;
+  --btn-act-hover: #f87171;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-neon: 0 0 15px rgba(124, 58, 237, 0.4);
+  --shadow-neon-cyan: 0 0 15px rgba(6, 182, 212, 0.4);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme Variables */
+[data-theme="light"] {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --bg-display: #f3f4f6;
+
+  --accent-primary: #6d28d9;
+  --accent-primary-hover: #7c3aed;
+  --accent-secondary: #0891b2;
+  --accent-secondary-hover: #06b6d4;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+  --text-accent: #7c3aed;
+
+  /* Button Types */
+  --btn-num-bg: #ffffff;
+  --btn-num-hover: #f3f4f6;
+  --btn-op-bg: #e5e7eb;
+  --btn-op-hover: #d1d5db;
+  --btn-fn-bg: #dbeafe;
+  --btn-fn-hover: #bfdbfe;
+  --btn-act-bg: #fee2e2;
+  --btn-act-hover: #fca5a5;
+
+  --shadow-neon: 0 4px 12px rgba(109, 40, 217, 0.15);
+  --shadow-neon-cyan: 0 4px 12px rgba(8, 145, 178, 0.15);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+}

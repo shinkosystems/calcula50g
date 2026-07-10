@@ -1,0 +1,108 @@
+/* @sos-edit: false */
+.calc-display {
+  width: 100%;
+  background: var(--bg-display);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.calc-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), transparent);
+}
+
+.display-status {
+  display: flex;
+  gap: var(--spacing-sm);
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.status-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  transition: all var(--transition-fast);
+}
+
+.status-badge.active-deg {
+  background: rgba(124, 58, 237, 0.15);
+  color: var(--text-accent);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.status-badge.active-rad {
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.status-badge.active-m {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.display-expression-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-align: right;
+  scrollbar-width: none; /* Firefox */
+}
+
+.display-expression-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.display-expression {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  transition: all var(--transition-fast);
+}
+
+.display-result-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-align: right;
+  scrollbar-width: none;
+}
+
+.display-result-container::-webkit-scrollbar {
+  display: none;
+}
+
+.display-result {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  transition: all var(--transition-normal);
+}
+
+.display-result.has-result {
+  color: var(--text-primary);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}

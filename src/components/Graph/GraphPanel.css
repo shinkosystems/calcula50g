@@ -1,0 +1,121 @@
+/* @sos-edit: false */
+.graph-form {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.graph-input-group {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: var(--bg-primary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding-left: var(--spacing-md);
+}
+
+.fn-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-secondary);
+  font-weight: 700;
+  margin-right: var(--spacing-xs);
+  user-select: none;
+}
+
+.graph-input-group input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: var(--spacing-sm) 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.graph-plot-btn {
+  background: var(--accent-secondary);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 0 var(--spacing-md);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.graph-plot-btn:hover {
+  background: var(--accent-secondary-hover);
+}
+
+.graph-error-msg {
+  color: var(--btn-act-bg);
+  font-size: 12px;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+}
+
+.plot-container-wrapper {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: var(--spacing-md);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .plot-container-wrapper {
+  background: #18181c; /* Fundo escuro leve para o canvas do gráfico */
+}
+
+.plot-canvas {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Customizar cores do SVG de function-plot no Dark Mode */
+[data-theme="dark"] .plot-canvas svg {
+  background: #18181c !important;
+}
+
+[data-theme="dark"] .plot-canvas .grid line {
+  stroke: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .plot-canvas .axis line,
+[data-theme="dark"] .plot-canvas .axis path {
+  stroke: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme="dark"] .plot-canvas .axis text {
+  fill: rgba(255, 255, 255, 0.5) !important;
+}
+
+.graph-tips {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+}
+
+.graph-tips h4 {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.graph-tips ul {
+  list-style: none;
+}
+
+.graph-tips li {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 2px;
+}

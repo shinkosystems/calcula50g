@@ -1,0 +1,124 @@
+/* @sos-edit: false */
+.calc-btn {
+  position: relative;
+  overflow: hidden;
+  height: 48px;
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.08s ease, background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.calc-btn:active {
+  transform: scale(0.94);
+}
+
+.btn-text {
+  position: relative;
+  z-index: 2;
+}
+
+/* Tipos de Botões */
+.btn-number {
+  background-color: var(--btn-num-bg);
+  color: var(--text-primary);
+}
+
+.btn-number:hover {
+  background-color: var(--btn-num-hover);
+}
+
+.btn-operator {
+  background-color: var(--btn-op-bg);
+  color: var(--accent-secondary);
+  font-weight: 600;
+}
+
+.btn-operator:hover {
+  background-color: var(--btn-op-hover);
+}
+
+.btn-function {
+  background-color: var(--btn-fn-bg);
+  color: var(--text-accent);
+  font-size: 13px;
+}
+
+.btn-function:hover {
+  background-color: var(--btn-fn-hover);
+}
+
+.btn-memory {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.btn-memory:hover {
+  background-color: var(--btn-num-hover);
+  color: var(--text-primary);
+}
+
+.btn-action {
+  background-color: var(--btn-act-bg);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn-action:hover {
+  background-color: var(--btn-act-hover);
+}
+
+/* Botão de Igual "=" Especial */
+.btn-equals {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: var(--shadow-neon);
+}
+
+.btn-equals:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+}
+
+/* Efeito Ripple */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-animation 0.5s ease-out;
+  background-color: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+[data-theme="light"] .btn-ripple {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Responsividade de altura para telas maiores */
+@media (min-width: 480px) {
+  .calc-btn {
+    height: 54px;
+    font-size: 16px;
+  }
+  .btn-function {
+    font-size: 14px;
+  }
+}
