@@ -47,8 +47,9 @@ export const Button: React.FC<ButtonProps> = ({ label, type, onClick }) => {
     <button
       className={`calc-btn btn-${type}`}
       onClick={handleClick}
+      translate="no"
     >
-      <span className="btn-text">{label}</span>
+      <span className="btn-text" translate="no">{label}</span>
     </button>
   );
 };

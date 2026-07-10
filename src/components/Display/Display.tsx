@@ -16,9 +16,9 @@ export const Display: React.FC<DisplayProps> = ({
   hasMemory
 }) => {
   return (
-    <div className="calc-display">
+    <div className="calc-display" translate="no">
       <div className="display-status">
-        <span className={`status-badge ${angleMode === 'DEG' ? 'active-deg' : 'active-rad'}`}>
+        <span className={`status-badge ${angleMode === 'DEG' ? 'active-deg' : 'active-rad'}`} translate="no">
           {angleMode}
         </span>
         {hasMemory && (
@@ -28,12 +28,12 @@ export const Display: React.FC<DisplayProps> = ({
         )}
       </div>
       <div className="display-expression-container">
-        <div className="display-expression" title={expression}>
+        <div className="display-expression" title={expression} translate="no">
           {expression || '0'}
         </div>
       </div>
       <div className="display-result-container">
-        <div className={`display-result ${result ? 'has-result' : ''}`}>
+        <div className={`display-result ${result ? 'has-result' : ''}`} translate="no">
           {result || '0'}
         </div>
       </div>
